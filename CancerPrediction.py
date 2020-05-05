@@ -1,346 +1,485 @@
 
-import tkinter as tk
-import pandas as pd
-import numpy as np
-import random
-from tkinter import *
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.cross_validation import train_test_split
-from sklearn import metrics
-from sklearn.metrics import classification_report
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import roc_curve
-from sklearn.svm import SVC
-from PIL import ImageTk, Image
-from tkinter import filedialog
-import os
 
-#initiating tk window
+
+Skip to content
+Using Gmail with screen readers
+akhil02kura@gmail.com 
+Enable desktop notifications for Gmail.
+   OK  No thanks
+
+9 of 39
+code 3
+Inbox
+x
+
+akhil kura <akhil02kura@gmail.com>
+Attachments
+Wed, Apr 11, 2018, 3:04 AM
+to me
+
+
+Attachments area
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr  8 10:16:06 2018
+
+@author: srujan
+"""
+
+import tkinter as tk
+from tkinter import *
+from tkinter import filedialog
+import pandas as pd
+import time 
+from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
+from sklearn import metrics
+
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_breast_cancer
+import mglearn
+import pandas as pd
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
+import matplotlib.pyplot as plt
+#%matplotlib inline
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_breast_cancer
+
+
+
+
+
+
+
+
+
+
 
 window=tk.Tk()
-window.title("Predict Employee Turnover")
-window.geometry("1000x1000")
+vscrollbar = tk.Scrollbar(window)
 
-#label
-title=tk.Label(text="Welcome!!!",font=("Times New Roman",20))
-title.grid(row=0,column=0)
-lab=tk.Label(text="Enter the following Details ",font=("Times New Roman",14))
-lab.grid(row=1,column=0)
-varb=tk.Label(text="Satisfaction Level")
-varb.grid(row=4,column=0)
-varb1=tk.Label(text="Last Evaluvation")
-varb1.grid(row=5,column=0)
-varb2=tk.Label(text="Time spent at company")
-varb2.grid(row=6,column=0)
-varb3=tk.Label(text="Work Accident")
-varb3.grid(row=7,column=0)
+window.geometry("2000x1000")
+window.title("BREAST CANCER DIAGNOSIS")
+cwgt=Canvas(window,width=2000,height=1000,yscrollcommand=vscrollbar.set)
 
-#Accepting the Entries
-entry1=tk.Entry()
-entry1.grid(row=4,column=2)
-entry2=tk.Entry()
-entry2.grid(row=5,column=2)
-entry3=tk.Entry()
-entry3.grid(row=6,column=2)
-entry4=tk.Entry()
-entry4.grid(row=7,column=2)
-
-
-
-# Logistic Regression
-def display():
-    hr = pd.read_csv('C://Users/shreya devi/Downloads/turnover.csv')
-    col_names = hr.columns.tolist()
-    hr=hr.rename(columns = {'sales':'department'})
-    hr['department']=np.where(hr['department'] =='support', 'technical', hr['department'])
-    hr['department']=np.where(hr['department'] =='IT', 'technical', hr['department'])
-    cat_vars=['department','salary']
-    for var in cat_vars:
-        cat_list='var'+'_'+var
-        cat_list = pd.get_dummies(hr[var], prefix=var)
-        hr1=hr.join(cat_list)
-        hr=hr1
-    hr.drop(hr.columns[[8, 9]], axis=1, inplace=True)
-    hr.columns.values
-    hr_vars=hr.columns.values.tolist()
-    y=['left']
-    X=[i for i in hr_vars if i not in y]
-    cols=['satisfaction_level', 'last_evaluation', 'time_spend_company', 'Work_accident'] 
-    X=hr[cols]
-    y=hr['left']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
-    logreg = LogisticRegression()
-    logreg.fit(X_train, y_train)
-    
-    cm1=metrics.confusion_matrix(y_test, logreg.predict(X_test))
-    total=sum(sum(cm1))
-    accuracy=(cm1[0,0]+cm1[1,1])/total
-    sensitivity=cm1[0,0]/(cm1[0,0]+cm1[0,1])
-    specificity=cm1[1,1]/(cm1[1,0]+cm1[1,1])
-    
-    title=tk.Label(text="Logistic Regression",font=("Times New Roman",16))
-    title.grid()
-    greet_display=tk.Text(height=10,width=20)
-    greet_display.grid()
-    greet_display.insert(tk.END,"Confusion Matrix:\n")
-    greet_display.insert(tk.END,cm1)
-    greet_display.insert(tk.END,"\n")
-    greet_display.insert(tk.END,"Accuracy:\n")
-    greet_display.insert(tk.END,accuracy)
-    greet_display.insert(tk.END,"\n")
-    greet_display.insert(tk.END,"Sensitivity:\n")
-    greet_display.insert(tk.END,sensitivity)
-    greet_display.insert(tk.END,"\n")
-    greet_display.insert(tk.END,"Specificity:\n")
-    greet_display.insert(tk.END,specificity)
-    
- #random forest
-def display1():
-    hr = pd.read_csv('C://Users/shreya devi/Downloads/turnover.csv')
-    col_names = hr.columns.tolist()
-    hr=hr.rename(columns = {'sales':'department'})
-    hr['department']=np.where(hr['department'] =='support', 'technical', hr['department'])
-    hr['department']=np.where(hr['department'] =='IT', 'technical', hr['department'])
-    cat_vars=['department','salary']
-    for var in cat_vars:
-        cat_list='var'+'_'+var
-        cat_list = pd.get_dummies(hr[var], prefix=var)
-        hr1=hr.join(cat_list)
-        hr=hr1
-    hr.drop(hr.columns[[8, 9]], axis=1, inplace=True)
-    hr.columns.values
-    hr_vars=hr.columns.values.tolist()
-    y=['left']
-    X=[i for i in hr_vars if i not in y]
-
-    cols=['satisfaction_level', 'last_evaluation', 'time_spend_company', 'Work_accident', 'promotion_last_5years', 
-      'department_RandD', 'department_hr', 'department_management', 'salary_high', 'salary_low'] 
-    X=hr[cols]
-    y=hr['left']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
-    rf = RandomForestClassifier()
-    rf.fit(X_train, y_train)
-   
-    cm1=metrics.confusion_matrix(y_test, rf.predict(X_test))
-    total=sum(sum(cm1))
-    accuracy=(cm1[0,0]+cm1[1,1])/total
-    sensitivity=cm1[0,0]/(cm1[0,0]+cm1[0,1])
-    specificity=cm1[1,1]/(cm1[1,0]+cm1[1,1])
-   
-    title=tk.Label(text="Random Forest",font=("Times New Roman",16))
-    title.grid()
-    greet_display1=tk.Text(height=10,width=20)
-    greet_display1.grid()
-    greet_display1.insert(tk.END,"Confusion Matrix:\n")
-    greet_display1.insert(tk.END,cm1)
-    greet_display1.insert(tk.END,"\n")
-    greet_display1.insert(tk.END,"Accuracy:\n")
-    greet_display1.insert(tk.END,accuracy)
-    greet_display1.insert(tk.END,"\n")
-    greet_display1.insert(tk.END,"Sensitivity:\n")
-    greet_display1.insert(tk.END,sensitivity)
-    greet_display1.insert(tk.END,"\n")
-    greet_display1.insert(tk.END,"Specificity:\n")
-    greet_display1.insert(tk.END,specificity)
-   
-   
-    
-#svm
-def display2():
-    hr = pd.read_csv('C://Users/shreya devi/Downloads/turnover.csv')
-    col_names = hr.columns.tolist()
-    hr=hr.rename(columns = {'sales':'department'})
-    hr['department']=np.where(hr['department'] =='support', 'technical', hr['department'])
-    hr['department']=np.where(hr['department'] =='IT', 'technical', hr['department'])
-    cat_vars=['department','salary']
-    for var in cat_vars:
-        cat_list='var'+'_'+var
-        cat_list = pd.get_dummies(hr[var], prefix=var)
-        hr1=hr.join(cat_list)
-        hr=hr1
-    hr.drop(hr.columns[[8, 9]], axis=1, inplace=True)
-    hr.columns.values
-    hr_vars=hr.columns.values.tolist()
-    y=['left']
-    X=[i for i in hr_vars if i not in y]
-    cols=['satisfaction_level', 'last_evaluation', 'time_spend_company', 'Work_accident', 'promotion_last_5years', 
-      'department_RandD', 'department_hr', 'department_management', 'salary_high', 'salary_low'] 
-    X=hr[cols]
-    y=hr['left']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
-    svc = SVC(probability=True)
-    svc.fit(X_train, y_train)
-   
-    cm1=metrics.confusion_matrix(y_test,svc.predict(X_test))
-    total=sum(sum(cm1))
-    accuracy=(cm1[0,0]+cm1[1,1])/total
-    sensitivity=cm1[0,0]/(cm1[0,0]+cm1[0,1])
-    specificity=cm1[1,1]/(cm1[1,0]+cm1[1,1])
-    
-    title=tk.Label(text="Support Vector Machine",font=("Times New Roman",16))
-    title.grid()
-    greet_display2=tk.Text(height=10,width=20)
-    greet_display2.grid()
-    greet_display2.insert(tk.END,"Confusion Matrix:\n")
-    greet_display2.insert(tk.END,cm1)
-    greet_display2.insert(tk.END,"\n")
-    greet_display2.insert(tk.END,"Accuracy:\n")
-    greet_display2.insert(tk.END,accuracy)
-    greet_display2.insert(tk.END,"\n")
-    greet_display2.insert(tk.END,"Sensitivity:\n")
-    greet_display2.insert(tk.END,sensitivity)
-    greet_display2.insert(tk.END,"\n")
-    greet_display2.insert(tk.END,"Specificity:\n")
-    greet_display2.insert(tk.END,specificity)
+vscrollbar.config(command=cwgt.yview)
+vscrollbar.pack(side=tk.RIGHT, fill=tk.Y)
  
+f=tk.Frame(cwgt) #Create the frame which will hold the widgets
+
+cwgt.pack(side="right", fill="both", expand=True)
+
+#Updated the window creation
+cwgt.create_window(0,0,window=f, anchor='nw')
+
+#Added more content here to activate the scroll
+
+#Removed the frame packing
+#f.pack()
+
+#Updated the screen before calculating the scrollregion
+
+
+image1=PhotoImage(file="F:\\MLPROJECT\\ML_scikit_Cancer\\pink.PGM")
+
+
+# keep a link to the image to stop the image being garbage collected
+cwgt.img=image1
+cwgt.create_image(0, 0, anchor=NW, image=image1)
+#b1=Button(cwgt, text="Hello", bd=0)
+window.iconbitmap('F:\\MLPROJECT\\ML_scikit_Cancer\\logo_bxb_icon.ico')
+ip_label=tk.Label(text="Upload Your Report CSV File: ")
+#ip_label.grid(column=1,row=1)
+
+
+
+cwgt.create_window(1,1, window=ip_label, anchor=NW)
+
+def relapse(): 
+    for label in labels:
+        label.destroy()
+        
+
+
+relapse_button=tk.Button(text="relapse",command=relapse)
+#relapse_button.grid(column=2,row=20)
+cwgt.create_window(600,1, window=relapse_button, anchor=NW)
+
+
+
+
+
+
+
+quit_button=tk.Button(text="quit",command=quit)
+
+
+cwgt.create_window(700,1, window=quit_button, anchor=NW)
+
+
+
+
+
+
+
+
+
+
+    
+
+
+class CancerClassification(object):
+    def __init__(self,pid,ctype):
+        self.pid=pid
+        self.ctype=ctype
+    def tostring(self):
+        return str(self.pid)+"--->"+self.ctype
+    
+
+def browse():
+    
+    global filename
+    filename=filedialog.askopenfilename()
+    global labels
+    labels=[]
+    #print(filename)
+    
+    if(filename.endswith('.csv')):
+        
+
+        
+            global ip_csv
+            labelFilepath=Label(text=":"+filename,bg='cyan')
+        
+            cwgt.create_window(300,1, window=labelFilepath, anchor=NW)
+
+            ip_path_label=tk.Label(text=filename)
+            #ip_path_label.grid(row=1,column=3)
+            knn_button=tk.Button(text="KNN",command=KNN)
+            cwgt.create_window(10,50, window=knn_button, anchor=NW)
+
+
+            svm_button=tk.Button(text="SVM",command=SVM)
+            #svm_button.grid(column=2,row=2)
+            cwgt.create_window(10,100, window=svm_button, anchor=NW)
+
+
+            cnn_button=tk.Button(text="CNN",command=CNN)
+           # cnn_button.grid(column=3,row=2)
+            cwgt.create_window(10,150, window=cnn_button, anchor=NW)
+ 
+            
+            print(filename)
+            #filename=filename.replace("/","\\")
+            ip_csv=pd.read_csv(filename,delimiter=',')
+            
+            print(filename)
+    else:
+        ip_path_label=tk.Label(text="selected is not a csv file, please select again")
+        ip_path_label.grid(row=1,column=3)
+        cwgt.create_window(20,50, window=ip_path_label, anchor=NW)
+
+    
+    
+
+def KNN():
+    c=load_breast_cancer()
+   
+    ip_csv.drop(['id'], axis = 1, inplace = True)
+    ip_np_data=ip_csv.values
+    print("---------------numpy array formatted-----------------")
+        #print(ip_np_data)
+    print("---------------loading module to train---------------")
+    knn=KNeighborsClassifier()
+    print("---------------splitting testing and training data---------------")
+    X_train,X_test,y_train,y_test=train_test_split(c.data,c.target,stratify=c.target,test_size=0.20,random_state=42)
+    print("--------------------training data------------------")
+    start_time=time.time()
+    knn.fit(X_train,y_train)
+    end_time=time.time()
+    print("training time :",end_time-start_time)
+    print("---------------testing accuracy data---------------\n")
+    
+    train_acc=(knn.score(X_train,y_train))*100
+    test_acc=(knn.score(X_test,y_test))*100
+    print(type(train_acc))
+    print(test_acc)
+    statement="Training data accuracy score: "
+    label_training=tk.Label(text=statement)
+    #label_training_acc.grid(row=3,column=1)
+    cwgt.create_window(500,100, window=label_training, anchor=NW)
+    label_training_acc=tk.Label(text=train_acc)
+    #label_training_acc.grid(row=3,column=2)
+    cwgt.create_window(700,100, window=label_training_acc, anchor=NW)
+   
+
+                  
+    statement="Testing data accuracy score: "
+    label_testing=tk.Label(text=statement)
+    #label_testing_acc.grid(row=4,column=1)
+    cwgt.create_window(500,130, window=label_testing, anchor=NW)
+    label_testing_acc=tk.Label(text=test_acc)
+    #label_testing_acc.grid(row=4,column=2)
+    cwgt.create_window(700,130, window=label_testing_acc, anchor=NW)
+    matrix=metrics.confusion_matrix(y_test, knn.predict(X_test))
+    label_matrix=tk.Label(text=matrix)
+    statement="Confusion Matrix is: "
+    label_M=tk.Label(text=statement)
+    cwgt.create_window(500,160, window=label_M, anchor=NW)
+    cwgt.create_window(650,160, window=label_matrix, anchor=NW)  
+    
+    matrix=metrics.confusion_matrix(y_test, knn.predict(X_test))
+    label_matrix=tk.Label(text=matrix)
+    statement="Classification Report is: "
+    label_M=tk.Label(text=statement)
+    cwgt.create_window(500,210, window=label_M, anchor=NW)
+    cReport=classification_report(y_test,knn.predict(X_test))
+    label_cReport=tk.Label(text=cReport)
+    cwgt.create_window(670,210, window=label_cReport, anchor=NW)
+
+    
+   
+                       
+    
+    print("---------------predicting input data---------------\n")
+    result_list=knn.predict(ip_np_data)
+    ip_ids=pd.read_csv(filename, usecols=['id'])
+    print("ID\t\t\tTYPE")
+    diagnose_report=[]
+    cn=CancerClassification(0,"t")
+    var=350
+    for i in range(0,ip_ids.size):
+        
+        ctype='malignant' if result_list[i]==0 else 'begnine'
+        #print(ctype)
+        diagnose_report.append(CancerClassification(ip_ids.values[i],ctype).tostring())
+    print(diagnose_report)  
+    for i in range(0,len(diagnose_report)):
+        label=tk.Label(text=diagnose_report[i])
+        #label.grid(row=var+i,column=1)
+        labels.append(label)
+        cwgt.create_window(500,var+i*30, window=label, anchor=NW)
+    print(dir(knn))
+    print(knn.kneighbors_graph())
+
+        
+def CNN():
+        
+    cancer=load_breast_cancer()
+    data = pd.read_csv("F:\\MLPROJECT\\ML_scikit_Cancer\\breast-cancer-dataset.csv", index_col=False)
+    data['diagnosis'] = data['diagnosis'].apply(lambda x: '1' if x == 'M' else '0')
+    data = data.set_index('id')
+    del data['Unnamed: 32']
+    Y = data['diagnosis'].values
+    X = data.drop('diagnosis', axis=1).values
+    
+    X_train,X_test,y_train,y_test=train_test_split(X,Y,test_size=0.20,random_state=21)
+    #Scaling
+    scaler=StandardScaler()
+    X_train_scaled=scaler.fit(X_train).transform(X_train)
+    X_test_scaled = scaler.fit(X_test).transform(X_test)
+    
+    mlp=MLPClassifier(max_iter=10000,random_state=42)
+    mlp.fit(X_train_scaled,y_train)
+    print('Accuracy on training set after scaling :{:3f}'.format(mlp.score(X_train_scaled,y_train)))
+    print('Accuracy on test set after scanp.ling:{:3f}'.format(mlp.score(X_test_scaled,y_test)))
+    
+    train_acc=(mlp.score(X_train_scaled,y_train))*100
+    
+    statement="Training data accuracy score: "
+    label_training=tk.Label(text=statement)
+    #label_training_acc.grid(row=3,column=1)
+    cwgt.create_window(500,100, window=label_training, anchor=NW)
+    label_training_acc=tk.Label(text=train_acc)
+    #label_training_acc.grid(row=3,column=2)
+    cwgt.create_window(700,100, window=label_training_acc, anchor=NW)
+
+    
+    
+    test_acc=(mlp.score(X_test_scaled,y_test))*100
+    statement="Testing data accuracy score: "
+    label_testing=tk.Label(text=statement)
+    #label_testing_acc.grid(row=4,column=1)
+    cwgt.create_window(500,130, window=label_testing, anchor=NW)
+    label_testing_acc=tk.Label(text=test_acc)
+    #label_testing_acc.grid(row=4,column=2)
+    cwgt.create_window(700,130, window=label_testing_acc, anchor=NW)
+    matrix=metrics.confusion_matrix(y_test, mlp.predict(X_test_scaled))
+    label_matrix=tk.Label(text=matrix)
+    statement="Confusion Matrix is: "
+    label_M=tk.Label(text=statement)
+    cwgt.create_window(500,160, window=label_M, anchor=NW)
+    cwgt.create_window(650,160, window=label_matrix, anchor=NW)
+    
+    matrix=metrics.confusion_matrix(y_test, mlp.predict(X_test_scaled))
+    label_matrix=tk.Label(text=matrix)
+    statement="Classification Report is: "
+    label_M=tk.Label(text=statement)
+    cwgt.create_window(500,210, window=label_M, anchor=NW)
+    cReport=classification_report(y_test,mlp.predict(X_test_scaled))
+    label_cReport=tk.Label(text=cReport)
+    cwgt.create_window(670,210, window=label_cReport, anchor=NW)
+
+    
+    
+
+    inputData=pd.read_csv(filename)
+    ip_ids=pd.read_csv(filename, usecols=['id'])
+    
+    ip_ids=ip_ids.values
+    for i in range(0,len(ip_ids)):
+        print(ip_ids[i])
+    temp = inputData.drop('id', axis=1).values
+    scalertemp=StandardScaler().fit(temp)
+    temp_scaled=scaler.transform(temp);
+    result=mlp.predict(temp_scaled)
+    
+    
+    
+    report=[]
+    var=350
+    for i in range(0,ip_ids.size):
+        ctype='malignant' if result[i]=='1' else 'begnine'
+        report.append(CancerClassification(ip_ids[i],ctype).tostring())
+    for i in range(0,len(report)):
+        label=tk.Label(text=report[i])
+        #label.grid(row=var+i,column=1)
+        labels.append(label)
+        cwgt.create_window(500,var+i*30, window=label, anchor=NW)
+    print(dir(mlp))
+           
+
+def SVM():
+    cancer=load_breast_cancer()
+    data=pd.read_csv("F:\\MLPROJECT\\ML_scikit_Cancer\\breast-cancer-dataset.csv",delimiter=',')
+    
+    data['diagnosis'] = data['diagnosis'].apply(lambda x: '1' if x == 'M' else '0')
+    data = data.set_index('id')
+    
+    del data['Unnamed: 32']
+
+    Y = data['diagnosis'].values
+    X = data.drop('diagnosis', axis=1).values
+    #print(X)
+    print(data.groupby('diagnosis').size())
+    inputData=pd.read_csv(filename)
+    temp = inputData.drop('id', axis=1).values
+    scaler=StandardScaler().fit(temp)
+    temp_scaled=scaler.transform(temp);
+                            
+        
+            
+    model = SVC(C=2.0, kernel='rbf')
+    
+    model.fit(X,Y)
+    print(model.score(X,Y))
+    X_train, X_test, Y_train, Y_test = train_test_split (X, Y, test_size = 0.20, random_state=21)
+    scaler = StandardScaler().fit(X_train)
+    X_train_scaled = scaler.transform(X_train)
+    X_test_scaled=scaler.transform(X_test)
+    svm=SVC(C=2.0,kernel='rbf')
+    svm.fit(X_train_scaled, Y_train)
+            #svm.fit(X_train,X_test)
+    print(svm.score(X_train_scaled,Y_train))
+    print(svm.score(X_test_scaled,Y_test))
+
+    
+    print('prediction:',svm.predict(temp_scaled))
+    result=svm.predict(temp_scaled)
+    
+    
+    train_acc=(svm.score(X_train_scaled,Y_train))*100
+    test_acc=(svm.score(X_test_scaled,Y_test))*100
+    print(type(train_acc))
+    #print(test_acc)
+    statement="Training data accuracy score: "
+    label_training=tk.Label(text=statement)
+    cwgt.create_window(500,100, window=label_training, anchor=NW)
+
+    #label_training_acc.grid(row=3,column=1)
+    label_training_acc=tk.Label(text=train_acc)
+    #label_training_acc.grid(row=3,column=2)
+    cwgt.create_window(700,100, window=label_training_acc, anchor=NW)
+
+                       
+    statement="Testing data accuracy score: "
+    label_testing=tk.Label(text=statement)
+    #label_testing_acc.grid(row=4,column=1)
+    cwgt.create_window(500,130, window=label_testing, anchor=NW)
+
+    label_testing_acc=tk.Label(text=test_acc)
+    #label_testing_acc.grid(row=4,column=2)
+    cwgt.create_window(700,130, window=label_testing_acc, anchor=NW)
+    
+    
+    matrix=metrics.confusion_matrix(Y_test, svm.predict(X_test_scaled))
+    label_matrix=tk.Label(text=matrix)
+    statement="Confusion Matrix is: "
+    label_M=tk.Label(text=statement)
+    cwgt.create_window(500,160, window=label_M, anchor=NW)
+    cwgt.create_window(650,160, window=label_matrix, anchor=NW)
+    
+    statement="Classification Report is: "
+    label_M=tk.Label(text=statement)
+    cwgt.create_window(500,210, window=label_M, anchor=NW)
+
+    cReport=classification_report(Y_test,svm.predict(X_test_scaled))
+    label_cReport=tk.Label(text=cReport)
+    cwgt.create_window(670,210, window=label_cReport, anchor=NW)
+
+    
+
+    ip_ids=pd.read_csv(filename, usecols=['id'])
+    ip_ids=ip_ids.values
+    report=[]
+    var=350
+    for i in range(0,ip_ids.size):
+        ctype='malignant' if result[i]=='1' else 'begnine'
+        report.append(CancerClassification(ip_ids[i],ctype).tostring())
+    for i in range(0,len(report)):
+        label=tk.Label(text=report[i])
+        #label.grid(row=var+i,column=1)
+        labels.append(label)
+
+        cwgt.create_window(500,var+i*30, window=label, anchor=NW)
+
+    print(report)
+    print(dir(svm))
+    c_report=[]
+    
+    classify_report(matrix,cReport,train_acc=train_acc,test_acc=test_acc)
+    
+def classify_report(matrix,c_report,train_acc,test_acc):
+    report_win=tk.Tk()
+    test_button=tk.Button(text="test")
+    test_button.pack()
+    report_win.mainloop()
+    
     
 def quit():
-    return window.destroy()
-
-def roc():
-    #title=tk.Label(text="ROC Curve Comparing Logistic Regression,SVM,Random Forest",font=("Times New Roman",16))
-    #title.grid()
-    
-    hr = pd.read_csv('C://Users/shreya devi/Downloads/turnover.csv')
-    col_names = hr.columns.tolist()
-    hr=hr.rename(columns = {'sales':'department'})
-    hr['department']=np.where(hr['department'] =='support', 'technical', hr['department'])
-    hr['department']=np.where(hr['department'] =='IT', 'technical', hr['department'])
-    cat_vars=['department','salary']
-    for var in cat_vars:
-        cat_list='var'+'_'+var
-        cat_list = pd.get_dummies(hr[var], prefix=var)
-        hr1=hr.join(cat_list)
-        hr=hr1
-    hr.drop(hr.columns[[8, 9]], axis=1, inplace=True)
-    hr.columns.values
-    hr_vars=hr.columns.values.tolist()
-    y=['left']
-    X=[i for i in hr_vars if i not in y]
-    cols=['satisfaction_level', 'last_evaluation', 'time_spend_company', 'Work_accident', 'promotion_last_5years', 
-      'department_RandD', 'department_hr', 'department_management', 'salary_high', 'salary_low'] 
-    X=hr[cols]
-    y=hr['left']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
-    rf = RandomForestClassifier()
-    rf.fit(X_train, y_train)
-    logreg = LogisticRegression()
-    logreg.fit(X_train, y_train)
-    
-    
-    svc = SVC(probability=True)
-    svc.fit(X_train, y_train)
-
-    logit_roc_auc = roc_auc_score(y_test, logreg.predict(X_test))
-    fpr, tpr, thresholds = roc_curve(y_test, logreg.predict_proba(X_test)[:,1])
-
-    rf_roc_auc = roc_auc_score(y_test, rf.predict(X_test))
-    rf_fpr, rf_tpr, rf_thresholds = roc_curve(y_test, rf.predict_proba(X_test)[:,1])
-
-    svc_roc_auc = roc_auc_score(y_test, svc.predict(X_test))
-    svc_fpr,svc_tpr, svc_thresholds = roc_curve(y_test, svc.predict_proba(X_test)[:,1])
-
-    plt.figure()
-    plt.plot(fpr, tpr, label='Logistic Regression (area = %0.2f)' % logit_roc_auc)
-    plt.plot(rf_fpr, rf_tpr, label='Random Forest (area = %0.2f)' % rf_roc_auc)
-    plt.plot(svc_fpr, svc_tpr, label='svm (area = %0.2f)' % svc_roc_auc)
-
-    plt.plot([0, 1], [0, 1],'r--')
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver operating characteristic')
-    plt.legend(loc="lower right")
-    plt.savefig('ROC')
-    plt.show()
-
-def predict():
-    hr = pd.read_csv('C://Users/shreya devi/Downloads/turnover.csv')
-    col_names = hr.columns.tolist()
-    hr=hr.rename(columns = {'sales':'department'})
-    hr['department']=np.where(hr['department'] =='support', 'technical', hr['department'])
-    hr['department']=np.where(hr['department'] =='IT', 'technical', hr['department'])
-    cat_vars=['department','salary']
-    for var in cat_vars:
-        cat_list='var'+'_'+var
-        cat_list = pd.get_dummies(hr[var], prefix=var)
-        hr1=hr.join(cat_list)
-        hr=hr1
-    hr.drop(hr.columns[[8, 9]], axis=1, inplace=True)
-    hr.columns.values
-    hr_vars=hr.columns.values.tolist()
-    y=['left']
-    X=[i for i in hr_vars if i not in y]
-
-    cols=['satisfaction_level', 'last_evaluation', 'time_spend_company', 'Work_accident'] 
-    X=hr[cols]
-    y=hr['left']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
-    rf = RandomForestClassifier()
-    rf.fit(X_train, y_train)
-    a=entry1.get()
-    b=entry2.get()
-    c=entry3.get()
-    d=entry4.get()
-    #if(a!=NULL||b!=NULL||c!=NULL||d!=NULL):
-	
-    #p=rf.predict(X_test)
-    #predict=random.choice(p)
-    predict=(rf.predict([[a,b,c,d]]))
-    
+    window.destroy()
+        
+        
+        
+browse_button=tk.Button(text="browse file:  ",command=browse)
+cwgt.create_window(210,1, window=browse_button, anchor=NW) 
     
 
-    #title=tk.Label(text="Random Forest",font=(" The Employee may",16))
-    #title.grid()
-    greet_disp=tk.Text(height=4,width=60)
-    greet_disp.grid()
-    if(predict==[0]):
-    	#lab=tk.Label(text="The Employee may leave the organisation")
-    	#lab.grid()
-        greet_disp.insert(tk.END," The Employee may leave the organisation")
-    	#greet_disp.insert(tk.END,predict)
-	#greet_disp=tk.Message(" The Employee may leave the organisation")
-        greet_disp.grid()
-   
-    else:
-    	#lab1=tk.Label(text="The Employee may leave the organisation")
-    	#lab1.grid()
-        greet_disp.insert(tk.END,"The Employee will mostly not leave the organisation")
-	#greet_disp=tk.(" The Employee may leave the organisation")
-        greet_disp.grid()
-   
-
-   
-
-
-#buttons
-
-
-button1=tk.Button(text="Logistic Regression",command=display)
-button2=tk.Button(text="Support vector machine",command=display2)
-button3=tk.Button(text="Random Forest",command=display1)
-btn = Button( window,text='Roc Curve', command=roc)
-#btn1 = Button( window,text='svm roc', command=roc2)
-#btn2 = Button( window,text='Random forest roc', command=roc3)
-button =tk.Button(text="Quit",command=quit)
-submit=tk.Button(text="Predict",command=predict)
+window.update()
+cwgt.config(scrollregion=cwgt.bbox("all"))
 
 
 
-button1.grid(row=11,column=0)
-button2.grid(row=11,column=1)
-button3.grid(row=11,column=2)
-button.grid(row=11,column=3)
-btn.grid(row=11,column=4)
-submit.grid(row=8,column=2)
-#btn1.grid(row=5,column=5)
-#btn2.grid(row=6,column=5)
 
-
-
+    
 window.mainloop()
-
-
+final3.py
+Displaying final3.py.
