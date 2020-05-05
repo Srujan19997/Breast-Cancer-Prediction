@@ -1,25 +1,3 @@
-
-
-
-Skip to content
-Using Gmail with screen readers
-akhil02kura@gmail.com 
-Enable desktop notifications for Gmail.
-   OK  No thanks
-
-9 of 39
-code 3
-Inbox
-x
-
-akhil kura <akhil02kura@gmail.com>
-Attachments
-Wed, Apr 11, 2018, 3:04 AM
-to me
-
-
-Attachments area
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -52,16 +30,6 @@ from sklearn.metrics import classification_report
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_breast_cancer
-
-
-
-
-
-
-
-
-
-
 
 window=tk.Tk()
 vscrollbar = tk.Scrollbar(window)
@@ -121,20 +89,7 @@ cwgt.create_window(600,1, window=relapse_button, anchor=NW)
 
 quit_button=tk.Button(text="quit",command=quit)
 
-
 cwgt.create_window(700,1, window=quit_button, anchor=NW)
-
-
-
-
-
-
-
-
-
-
-    
-
 
 class CancerClassification(object):
     def __init__(self,pid,ctype):
@@ -481,5 +436,4 @@ cwgt.config(scrollregion=cwgt.bbox("all"))
 
     
 window.mainloop()
-final3.py
-Displaying final3.py.
+
